@@ -1,7 +1,14 @@
-import { Grid } from "@mui/material";
+import { Button, Grid } from "@mui/material";
+import CompareArrowsIcon from "@mui/icons-material/CompareArrows";
 
 const SwitchCurrency = () => {
-  return <Grid item>Iteem</Grid>;
+  return (
+    <Grid item>
+      <Button>
+        <CompareArrowsIcon />
+      </Button>
+    </Grid>
+  );
 };
 
 export default SwitchCurrency;
