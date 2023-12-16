@@ -8,7 +8,7 @@ import {
 } from "@mui/material";
 const InputAmout = () => {
   return (
-    <Grid item xs={12}>
+    <Grid item xs={12} md>
       <TextField
         label="Amount"
         fullWidth
