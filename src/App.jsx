@@ -2,8 +2,12 @@ import { Button, Container, Grid, Typography } from "@mui/material";
 import InputAmout from "./components/InputAmout";
 import SelectCountry from "./components/SelectCountry";
 import SwitchCurrency from "./components/SwitchCurrency";
+import { useState } from "react";
 
 function App() {
+  const [fromCurrency, setFromCurrency] = useState("");
+  const [toCurrency, setToCurrency] = useState("");
+
   const boxStyles = {
     background: "#fdfdfd",
     marginTop: "10rem",
@@ -23,9 +27,13 @@ function App() {
       </Typography>
       <Grid container spacing={2}>
         <InputAmout />
-        <SelectCountry />
+        <SelectCountry
+          value={fromCurrency}
+          setValue={setFromCurrency}
+          label="From "
+        />
         <SwitchCurrency />
-        <SelectCountry />
+        <SelectCountry value={toCurrency} setValue={setToCurrency} label="To" />
       </Grid>
     </Container>
   );
