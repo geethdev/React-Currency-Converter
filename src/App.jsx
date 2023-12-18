@@ -1,17 +1,42 @@
-import {  Container, Grid, Typography } from "@mui/material";
-import { useContext } from "react";
+import { Box, Container, Grid, Link, Typography } from "@mui/material";
+import axios from "axios";
+import { useContext, useEffect, useState } from "react";
 import InputAmout from "./components/InputAmout";
 import SelectCountry from "./components/SelectCountry";
 import SwitchCurrency from "./components/SwitchCurrency";
 import { CurrencyContext } from "./context/CurrencyContext";
 
 function App() {
-  const { fromCurrency, setFromCurrency, toCurrency, setToCurrency } =
-    useContext(CurrencyContext);
+  const {
+    fromCurrency,
+    setFromCurrency,
+    toCurrency,
+    setToCurrency,
+    firstAmount,
+  } = useContext(CurrencyContext);
+  const [resultCurrency, setResultCurrency] = useState(0);
+  const codeFromCurrency = fromCurrency.split(" ")[1];
+  const codeToCurrency = toCurrency.split(" ")[1];
+
+  useEffect(() => {
+    if (firstAmount) {
+      axios("https://api.currencyfreaks.com/v2.0/rates/latest", {
+        params: {
+          apikey: import.meta.env.VITE_API_KEY,
+          base_currency: codeFromCurrency,
+          currencies: codeToCurrency,
+        },
+      })
+        .then((response) =>
+          setResultCurrency(response.data.data[codeToCurrency])
+        )
+        .catch((error) => console.log(error));
+    }
+  }, [firstAmount, fromCurrency, toCurrency]);
 
   const boxStyles = {
     background: "#fdfdfd",
-    marginTop: "10rem",
+    marginTop: "10%",
     textAlign: "center",
     color: "#222",
     minHeight: "20rem",
@@ -24,18 +49,40 @@ function App() {
   return (
     <Container maxWidth="md" sx={boxStyles}>
       <Typography variant="h5" sx={{ marginBottom: "2rem" }}>
-        Stay Ahead With Accurate Conversion
+        Stay Ahead with Accurate Conversions
       </Typography>
       <Grid container spacing={2}>
         <InputAmout />
         <SelectCountry
           value={fromCurrency}
           setValue={setFromCurrency}
-          label="From "
+          label="From"
         />
         <SwitchCurrency />
         <SelectCountry value={toCurrency} setValue={setToCurrency} label="To" />
       </Grid>
+
+      {firstAmount ? (
+        <Box sx={{ textAlign: "left", marginTop: "1rem" }}>
+          <Typography>
+            {firstAmount} {fromCurrency} =
+          </Typography>
+          <Typography
+            variant="h5"
+            sx={{ marginTop: "5px", fontWeight: "bold" }}
+          >
+            {resultCurrency * firstAmount} {toCurrency}
+          </Typography>
+        </Box>
+      ) : (
+        ""
+      )}
+      <Typography
+        fontSize="10px"
+        sx={{ position: "absolute", bottom: "1rem", right: "1rem" }}
+      >
+        <Link target="_blank" rel="noopener" href=""></Link>
+      </Typography>
     </Container>
   );
 }
